@@ -82,7 +82,7 @@ public class PetStoreRequstBodySvc {
     }
 
     // Convert an object to JSON using Jackson ObjectMapper
-    private static String toJson(Object obj) {
+    public static String toJson(Object obj) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.writeValueAsString(obj);

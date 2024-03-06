@@ -14,9 +14,13 @@ import net.serenitybdd.core.steps.UIInteractions;
 import net.serenitybdd.rest.SerenityRest;
 import net.thucydides.model.util.EnvironmentVariables;
 import org.junit.Assert;
+import org.openapitools.model.Pet;
 
 import java.util.Locale;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static starter.petstore.core.ActivityRequstBody.generateFullAuthorJsonBody;
 import static starter.petstore.core.PetStoreRequstBodySvc.generateFullPetJsonBody;
 
 
@@ -74,6 +78,8 @@ public class StepDefs3 extends UIInteractions {
 //        String body = generateCreateNewPetBodyWithCategoryNameAndTagNameAs(categoryName, petName, tagName);
         String body = generateFullPetJsonBody(categoryName,petName,tagName);
 
+        generateFullAuthorJsonBody();
+
 //        RestAssured.baseURI = "https://petstore.swagger.io/v2";
         // Send POST request
          res = SerenityRest.given()
@@ -105,6 +111,8 @@ public class StepDefs3 extends UIInteractions {
 //                        .body("tags[0].name", equalTo(tagName))
 //        ));
 
+        assert( res.as(Pet.class).getName().equalsIgnoreCase(petName));
+        assertThat ( res.as(Pet.class).getTags().get(0).getName(), equalTo(petName));
 
     }
 

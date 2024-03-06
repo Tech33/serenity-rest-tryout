@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = "classpath:features",
         glue = "starter.petstore.stepdefs",
-        tags = "@api"
+        tags = "@api3"
 )
 public class RunTest {
 }

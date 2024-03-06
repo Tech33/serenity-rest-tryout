@@ -1,6 +1,6 @@
 
 
-@api
+@api3
 Feature: Pet API test
 
   Scenario: Get Pet API
