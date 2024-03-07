@@ -342,6 +342,7 @@
                 <version>7.1.0</version>
                 <executions>
                     <execution>
+                        <id>client-petstore</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -354,12 +355,35 @@
                                                                 <useJodaDates>true</useJodaDates>
                                                                 <dateLibrary>java8</dateLibrary>
                                                                 <generateBuilder>true</generateBuilder>
-                                <additionalModelTypeAnnotations>@lombok.Builder @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
+                                <!--suppress UnresolvedMavenProperty -->
+                                <additionalModelTypeAnnotations> @lombok.Builder @lombok.AllArgsConstructor </additionalModelTypeAnnotations>
                                 <!-- Additional configuration options -->
                             </configOptions>
                                                         <generateApis>false</generateApis>
                                                         <generateSupportingFiles>false</generateSupportingFiles>
                                                         <generateApiDocumentation>false</generateApiDocumentation>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>FakeRESTApi-api</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/test/resources/FakeRESTApi.yml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <configOptions>
+                                <sourceFolder>src/main/java</sourceFolder>
+                                <useBeanValidation>true</useBeanValidation>
+                                <useJodaDates>true</useJodaDates>
+                                <dateLibrary>java8</dateLibrary>
+                                <generateBuilder>true</generateBuilder>
+                                <additionalModelTypeAnnotations>@lombok.Builder @lombok.AllArgsConstructor </additionalModelTypeAnnotations>
+                                <!-- Additional configuration options -->
+                            </configOptions>
+                            <generateApis>false</generateApis>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <generateApiDocumentation>false</generateApiDocumentation>
                         </configuration>
                     </execution>
                 </executions>

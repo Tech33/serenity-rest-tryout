@@ -1,7 +1,7 @@
 package starter.petstore.core;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.openapitools.model.Category;
 import org.openapitools.model.Pet;
 import org.openapitools.model.Tag;
@@ -57,8 +57,8 @@ public class PetStoreRequstBodySvc {
         // Create a new Pet object using the builder pattern
 
         // Create a Tag object
-        Tag tag = new Tag(0L,tagName);
-        Category category = new Category(0L,categoryName);
+        Tag tag = new Tag(0L, tagName);
+        Category category = new Category(0L, categoryName);
 
         Pet pet = Pet.builder()
                 .id(123L) // Set the ID of the pet
@@ -69,7 +69,7 @@ public class PetStoreRequstBodySvc {
                 .build();
 
         // Convert the Pet object to JSON
-        String jsonPayload = toJson(pet);
+        String jsonPayload = toJsons(pet);
 
         // Print the JSON payload
         System.out.println(jsonPayload);
@@ -82,23 +82,25 @@ public class PetStoreRequstBodySvc {
     }
 
     // Convert an object to JSON using Jackson ObjectMapper
-    private static String toJson(Object obj) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(obj);
+    public static String toJsons(Object obj) {
+        /*try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            mapper.registerModule(new JsonNullableModule());
+            return mapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;
         }
-    }
+    }*/
+        Gson gson = new Gson();
 
-    public  Pet generateBasicPet(){
-        //Crate the actual object
-        Pet pet = new Pet();
-        pet.name("akash12345");
+        // Serialize object to JSON string
 
-        return pet;
+        return gson.toJson(obj);
     }
+}
 
 //    public Pet addTagsToPetAndReturn(){
 //        Pet pet  = generateBasicPet();
@@ -109,4 +111,4 @@ public class PetStoreRequstBodySvc {
 
 //        Builder.buildPet().withTags(Arrays.asList(tag1)).build();
 //    }
-}
+
