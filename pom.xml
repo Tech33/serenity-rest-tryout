@@ -7,7 +7,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Sample Serenity BDD project using JUnit 5</name>
+    <name>Sample Serenity BDD project using Cucumber</name>
 
     <properties>
         <serenity.version>4.0.46</serenity.version>
@@ -26,6 +26,7 @@
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
         <jsr305.version>3.0.1</jsr305.version>
+        <parallel.tests>1</parallel.tests>
 
     </properties>
     <dependencies>
@@ -35,7 +36,11 @@
             <artifactId>swagger-core</artifactId>
             <version>2.2.20</version>
         </dependency>
-
+        <dependency>
+            <groupId>tech.grasshopper</groupId>
+            <artifactId>extentreports-cucumber7-adapter</artifactId>
+            <version>1.14.0</version>
+        </dependency>
         <dependency>
             <groupId>net.serenity-bdd</groupId>
             <artifactId>serenity-core</artifactId>
@@ -54,12 +59,6 @@
             <version>${serenity.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>net.serenity-bdd</groupId>-->
-        <!--            <artifactId>serenity-junit5</artifactId>-->
-        <!--            <version>${serenity.version}</version>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
         <dependency>
             <groupId>net.serenity-bdd</groupId>
             <artifactId>serenity-screenplay</artifactId>
@@ -78,24 +77,11 @@
             <version>${serenity.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>net.serenity-bdd</groupId>-->
-        <!--            <artifactId>serenity-rest-assured</artifactId>-->
-        <!--            <version>${serenity.version}</version>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>        -->
-        <!-- <dependency>
-            <groupId>net.serenity-bdd</groupId>
-            <artifactId>serenity-screenplay-webdriver</artifactId>
-            <version>${serenity.version}</version>
-            <scope>test</scope>
-        </dependency> -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.11</version>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>
             <groupId>junit</groupId>
@@ -103,33 +89,12 @@
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
-
-
-        <!-- JUNIT 5 DEPENDENCY-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.junit.jupiter</groupId>-->
-        <!--            <artifactId>junit-jupiter-api</artifactId>-->
-        <!--            <version>${junit5.version}</version>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.junit.jupiter</groupId>-->
-        <!--            <artifactId>junit-jupiter-engine</artifactId>-->
-        <!--            <version>${junit5.version}</version>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.22.0</version>
             <scope>test</scope>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>org.projectlombok</groupId>-->
-        <!--            <artifactId>lombok</artifactId>-->
-        <!--            <version>1.18.22</version>-->
-        <!--            <scope>provided</scope>-->
-        <!--        </dependency>-->
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
@@ -209,7 +174,6 @@
             <artifactId>javafaker</artifactId>
             <version>0.15</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -221,7 +185,6 @@
             <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
@@ -243,13 +206,11 @@
             <artifactId>jackson-databind-nullable</artifactId>
             <version>0.2.6</version>
         </dependency>
-
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>2.0.1.Final</version>
         </dependency>
-
     </dependencies>
     <build>
         <plugins>
@@ -266,6 +227,7 @@
                 <version>3.2.5</version>
                 <configuration>
                     <includes>
+                        <include>**/*IT.java</include>
                         <include>**/*Test.java</include>
                         <include>**/Test*.java</include>
                         <include>**/*TestSuite.java</include>
@@ -273,7 +235,15 @@
                     </includes>
                     <systemPropertyVariables>
                         <webdriver.base.url>${webdriver.base.url}</webdriver.base.url>
-                        <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
+<!--                        <parallel>classes</parallel>-->
+<!--                        <threadCount>${parallel.tests}</threadCount>-->
+<!--                        <forkCount>${parallel.tests}</forkCount>-->
+<!--                        <forkCount>1</forkCount>-->
+<!--                        <reuseForks>false</reuseForks>-->
+                        <parallel>classes</parallel>
+                        <!-- <parallel>methods</parallel> -->
+                        <threadCount>1</threadCount>
+                        <useUnlimitedThreads>false</useUnlimitedThreads>
                     </systemPropertyVariables>
                 </configuration>
                 <executions>

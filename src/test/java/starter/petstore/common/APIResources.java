@@ -10,7 +10,8 @@ public enum APIResources {
 
     private final String value;
 
-    APIResources(String envValue) {
+    APIResources(String envValue)
+    {
         this.value = envValue;
     }
 

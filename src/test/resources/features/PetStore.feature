@@ -16,16 +16,21 @@ Feature: Pet API test
   Scenario Outline: Get Pet API
     Given User have the petstore API
     When User call "GET" Request on the Pet "<endpoint>"
-    When I use the response value
     Then User should get the status code as 200 for Pet API
+    Then the client should receive an HTTP 200 response code
+#    Then I use the response value
+    Then the client using jsonPath "items" should see 3 elements
+
     Examples:
       | endpoint |
       | /pet/findByStatus?status=available|
 
+  @api2
   Scenario Outline: Create Pet API
     Given User have the petstore API
     When User call "POST" Request on the Pet "<endpoint>" with dynamically generated body
     Then User should get the status code as 200 for Pet API
+    Then the client should receive an HTTP 200 response code
     And New pet is created successfully
     Examples:
       | endpoint |

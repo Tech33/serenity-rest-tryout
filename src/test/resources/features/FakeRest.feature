@@ -1,4 +1,4 @@
-@apiNo
+@api
 Feature: Fake Rest API
 
   Scenario Outline: Create Author API

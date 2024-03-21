@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import net.serenitybdd.annotations.Step;
+import net.serenitybdd.core.Serenity;
 import net.serenitybdd.rest.SerenityRest;
 import starter.petstore.common.APIResources;
 
@@ -56,6 +57,7 @@ public class GenericSteps {
         return callEndpointHttpMethod(url, method, "");
     }
 
+
     public Response callEndpointHttpMethod(String url, String method, String body) {
         switch (method) {
             case "GET":
@@ -68,27 +70,28 @@ public class GenericSteps {
     }
 
     private Response callEndpointHttpMethodGet(String url) {
-        Response response = SerenityRest.given()
+        Response response = SerenityRest.given().log().all()
                 .contentType("application/json")
                 .header("Content-Type", "application/json")
                 .get(url);
 
-        response.then().log().all();
-        response.getBody().prettyPrint();
+        //response.then().log().all();
+        //response.getBody().prettyPrint();
+        Serenity.setSessionVariable("Response").to(response);
         return response;
 
     }
 
     private Response callEndpointHttpMethodPost(String url, String body) {
-        Response response = SerenityRest.given()
+        Response response = SerenityRest.given().log().all()
                 .contentType("application/json")
                 .header("Content-Type", "application/json")
                 .body(body)
                 .when()
                 .post(url);
 
-        response.then().log().all();
-        response.getBody().prettyPrint();
+       Serenity.setSessionVariable("Response").to(response);
+
         return response;
     }
 

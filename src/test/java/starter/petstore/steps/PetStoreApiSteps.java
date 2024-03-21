@@ -5,14 +5,12 @@ import com.google.gson.Gson;
 import org.openapitools.model.Category;
 import org.openapitools.model.Pet;
 import org.openapitools.model.Tag;
-import starter.petstore.utils.Log;
 
 import java.util.List;
 
 public class PetStoreApiSteps {
 
-    //private static final Logger logger = LoggerFactory.getLogger(Hooks.class); // Using the same logger instance as Hooks
-    public static String generateFullPetJsonBody(String categoryName, String petName, String tagName) throws JsonProcessingException {
+    public static String generateFullPetJsonBody(Long id, String categoryName, String petName, String tagName) throws JsonProcessingException {
         // Create a new Pet object using the builder pattern
 
         // Create a Tag object
@@ -31,8 +29,7 @@ public class PetStoreApiSteps {
         String jsonPayload =  new Gson().toJson(pet);
 
         // Print the JSON payload
-        Log.info(jsonPayload);
-
+//        Log.info("Pet JSON payload is " + jsonPayload);
 
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        System.out.println("DEBUG:" +  objectMapper.writeValueAsString(pet));

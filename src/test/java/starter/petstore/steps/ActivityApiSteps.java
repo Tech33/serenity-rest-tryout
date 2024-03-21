@@ -1,10 +1,11 @@
 package starter.petstore.steps;
 
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.openapitools.model.Author;
-import starter.petstore.utils.Log;
 
+@Slf4j
 public class ActivityApiSteps {
 
     public static String generateFullAuthorJsonBody() {
@@ -13,10 +14,10 @@ public class ActivityApiSteps {
 
         // Convert an object to JSON using Google Gson ObjectMapper
 
-        String jsonPayload =  new Gson().toJson( author);
+        String jsonPayload =  new Gson().toJson(author);
 
         // Print the JSON payload
-        Log.info(jsonPayload);
+        log.info(jsonPayload);
 
         return jsonPayload;
     }

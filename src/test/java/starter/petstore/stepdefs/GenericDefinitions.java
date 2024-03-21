@@ -4,14 +4,15 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.annotations.Steps;
+import net.serenitybdd.core.Serenity;
+import net.serenitybdd.rest.SerenityRest;
 import org.skyscreamer.jsonassert.Customization;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.comparator.CustomComparator;
-import org.springframework.beans.factory.annotation.Autowired;
 import starter.petstore.steps.GenericSteps;
-import starter.petstore.utils.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -21,69 +22,28 @@ import java.util.stream.Collectors;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+@Slf4j
 public class GenericDefinitions {
-
-    private final SharedDataHolder sharedDataHolder;
-
-    @Autowired
-    public GenericDefinitions(SharedDataHolder sharedDataHolder) {
-        this.sharedDataHolder = sharedDataHolder;
-    }
 
     @Steps
     GenericSteps genericSteps;
+    @Steps
+    PetStepDef petStepDef;
 
-    private Response response;
+    private Response response = Serenity.sessionVariableCalled("Response");
     private Response responseNext;
 
 //Method used for initiliasing the Map with http query parameters (key,value) pairs
-//    @Given("the client uses the following url parameters:")
-//    public void theFollowingUrlParameters(Map<String, String> urlParameters) {
-//        genericSteps.setDecorateUrl(urlParameters);
-//    }
-
-    //Method that calls a web service endpoint configured in the enum class WebServiceEndpoints. The string used needs to be defines in the enum class
-    @When("the client calls {string} endpoint")
-    public void theUserCallsEndpoint(String webServiceEndpoint) {
-        this.response = genericSteps.callEndpoint(webServiceEndpoint);
-    }
-
-    //Method that does the same thing as ""the client calls {string} endpoint" step but store the response in another Response object in order to do a comparison check between to JSON objects. This can be used for a baseline-under test checking approach where you first call the baseline endpoint, then under test endpoint and compare the two responses
-    @When("the client calls {string} endpoint again")
-    public void theUserCallsEndpointAgain(String webServiceEndpoint) {
-        this.responseNext = genericSteps.callEndpoint(webServiceEndpoint);
-    }
-
-    //Same as "the client calls {string} endpoint" method but also checks that HTTP response code is 200
-    @When("the client calls {string} endpoint with success")
-    public void theUserCallsEndpointWithSuccess(String webServiceEndpoint) {
-        theUserCallsEndpoint(webServiceEndpoint);
-        theClientShouldReceiveHttpResponseCode(200);
-    }
-
-    @When("^I use the response value$")
-    public void useVariableValue() {
-        Log.info("Response Value is --------" + sharedDataHolder.getResponse().getBody().prettyPrint());
-        // Use the variable value as needed
-    }
-
-    // Same as "the client calls {string} endpoint again" method but also checks that HTTP response code is 200
-    @When("the client calls {string} endpoint again with success")
-    public void theUserCallsEndpointAgainWithSuccess(String webServiceEndpoint) {
-        theUserCallsEndpointAgain(webServiceEndpoint);
-        theClientShouldReceiveHttpResponseCode(200);
-    }
-
-    // Method used for doing a REST call for a method that requires a body
-    @When("the client calls {string} endpoint with body {string}")
-    public void theUserCallsEndpoint(String webServiceEndpoint, String body) {
-        this.response = genericSteps.callEndpoint(webServiceEndpoint, body);
-    }
+/*    @Given("the client uses the following url parameters:")
+    public void theFollowingUrlParameters(Map<String, String> urlParameters) {
+        genericSteps.setDecorateUrl(urlParameters);
+    }*/
 
     //Method that check the response object that has status code XXX (type int)
     @Then("the client should receive an HTTP {int} response code")
     public void theClientShouldReceiveHttpResponseCode(int httpCode) {
         assertThat(response.getStatusCode(), equalTo(httpCode));
+        SerenityRest.restAssuredThat(response -> response.statusCode(httpCode));
     }
 
     // Method that checks a jsonPath from response contains a certain string or part of a string (not exact match)
@@ -299,6 +259,5 @@ public class GenericDefinitions {
         String lastPageLink = pagesMap.get("last");
         return Integer.parseInt(lastPageLink.substring(lastPageLink.length() - 1));
     }
-
 
 }

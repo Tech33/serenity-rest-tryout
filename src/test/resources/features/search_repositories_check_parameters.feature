@@ -8,7 +8,6 @@ Feature: Basic checks for search/repositories parameters
   Scenario Outline: Should receive response if q parameter is used in query and data
     Given the client uses the following url parameters:
       | q | <value> |
-    When the client calls 'SEARCH_PETSTORE' endpoint
     Then the client should receive an HTTP 200 response code
     Then the client using jsonPath 'items' should see <numberItems> elements
     And the client using jsonPath 'total_count' should see having <numberTotal>

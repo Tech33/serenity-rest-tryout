@@ -9,44 +9,41 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import lombok.Getter;
+import lombok.Setter;
 import net.serenitybdd.annotations.Steps;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.openapitools.model.Author;
 import org.openapitools.model.Pet;
-import org.springframework.beans.factory.annotation.Autowired;
 import starter.petstore.common.APIResources;
 import starter.petstore.steps.GenericSteps;
 
 import java.util.Locale;
 import java.util.Map;
 
+import static java.lang.Long.parseLong;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static starter.petstore.hooks.Hooks.petUrl;
-import static starter.petstore.steps.ActivityApiSteps.generateFullAuthorJsonBody;
 import static starter.petstore.steps.PetStoreApiSteps.generateFullPetJsonBody;
+
 
 
 public class PetStepDef{
 
-//    Target ADD_TO_CART = Target.the("Google Search Box").located(By.cssSelector("//button[.='Add']"));
-
     @Steps
     GenericSteps genericSteps;
 
-    Response res;
 
+    @Getter @Setter
+    String currentUserName;
+
+    String id;
     String categoryName ;
     String petName;
     String tagName;
 
-    private final SharedDataHolder sharedDataHolder ;
-
-    @Autowired
-    public PetStepDef(SharedDataHolder sharedDataHolder) {
-        this.sharedDataHolder = sharedDataHolder;
-    }
+    Response res;
 
     @Given("I have a pet store API")
     public void iHaveAPetStoreAPI() {
@@ -78,15 +75,12 @@ public class PetStepDef{
         FakeValuesService fakeValuesService = new FakeValuesService(
                 new Locale("en-GB"), new RandomService());
 
+        id = fakeValuesService.regexify("[1-9]{3}");
         categoryName = fakeValuesService.regexify("[a-z]{10}");
         petName = fakeValuesService.regexify("[a-z]{10}");
         tagName = fakeValuesService.regexify("[a-z]{10}");
 
-//        String body = generateCreateNewPetBodyWithCategoryNameAndTagNameAs(categoryName, petName, tagName);
-        String body = generateFullPetJsonBody(categoryName,petName,tagName);
-
-        generateFullAuthorJsonBody();
-
+        String body = generateFullPetJsonBody(parseLong(id),categoryName,petName,tagName);
         String url = String.format("%s%s", RestAssured.baseURI, "/pet");
         res =  genericSteps.callEndpointHttpMethod(url,"POST",body);
 
@@ -97,26 +91,24 @@ public class PetStepDef{
 
         Gson gson = new Gson();
         Pet responseObject = gson.fromJson(res.getBody().asString(), Pet.class);
-        Author response = gson.fromJson(res.getBody().asString(), Author.class);
         assert( responseObject.getName().equalsIgnoreCase(petName));
         assertThat ( responseObject.getTags().get(0).getName(), equalTo(tagName));
-        assertThat ( response.getId().toString(), equalTo("123"));
-
     }
 
     @Given("User have the petstore API")
     public void userHaveThePetstoreAPI() {
 
-        RestAssured.baseURI= petUrl;
-    }
+        RestAssured.baseURI = petUrl;
 
+    System.out.println(APIResources.valueOf("searchPetStore").getValue());
+    }
 
     @When("User call {string} Request on the Pet {string}")
     public void userCallRequestOnThePet(String method, String endpoint) {
 
         String url = String.format("%s%s", RestAssured.baseURI,endpoint);
         res =  genericSteps.callEndpointHttpMethod(url,"GET","");
-        sharedDataHolder.setResponse(res);
+
     }
 
     @Then("User should get the status code as {int} for Pet API")
@@ -131,11 +123,12 @@ public class PetStepDef{
         FakeValuesService fakeValuesService = new FakeValuesService(
                 new Locale("en-GB"), new RandomService());
 
+        id = fakeValuesService.regexify("[1-9]{3}");
         categoryName = fakeValuesService.regexify("[a-z]{10}");
         petName = fakeValuesService.regexify("[a-z]{10}");
         tagName = fakeValuesService.regexify("[a-z]{10}");
 
-        String body = generateFullPetJsonBody(categoryName,petName,tagName);
+        String body = generateFullPetJsonBody(parseLong(id),categoryName,petName,tagName);
         String url = String.format("%s%s", RestAssured.baseURI,endpoint);
         res =  genericSteps.callEndpointHttpMethod(url,"POST",body);
     }
